@@ -1,0 +1,44 @@
+# =============================================================================
+# FILE:      requirements.txt
+# LOCATION:  project root (Intelligent_Tomato_Farm/requirements.txt)
+# PURPOSE:   Exact package list for the integrated system. Only packages
+#            actually imported by the final code are listed here.
+# =============================================================================
+
+# --- Web / API ---
+fastapi>=0.110
+uvicorn[standard]>=0.27
+python-multipart>=0.0.9
+requests>=2.31
+
+# --- YOLOv8 detection ---
+ultralytics>=8.2.0
+
+# --- Imaging / vision ---
+opencv-python>=4.9
+Pillow>=10.2
+numpy>=1.26
+
+# --- Classical analysis (HSV, K-means, Edge) ---
+scikit-learn>=1.4
+scipy>=1.12
+
+# --- Deep learning (irrigation NN + supervisor) ---
+tensorflow>=2.15
+
+# --- Fuzzy logic (irrigation) ---
+scikit-fuzzy>=0.4.2
+
+# --- Forecasting (irrigation) ---
+statsmodels>=0.14
+
+# --- Persistence helpers ---
+joblib>=1.3
+
+# --- Data / dataset preparation ---
+pandas>=2.2
+
+# --- XLS parsing (if needed for tomato fruit dataset) ---
+openpyxl>=3.1
+
+# --- Video / media in browser is handled client-side; no extra dep ---
