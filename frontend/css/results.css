@@ -1,0 +1,65 @@
+/* =============================================================================
+   FILE:      frontend/css/results.css
+   LOCATION:  Intelligent_Tomato_Farm/frontend/css/results.css
+   PURPOSE:   Final decision card, recommendation box, uncertain banner.
+   ============================================================================= */
+
+.result-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 20px;
+  border: 2px solid #eaeef2;
+  text-align: center;
+}
+.result-card .decision {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 8px 0;
+}
+.result-card .conf {
+  font-size: 0.85rem;
+  color: #666;
+}
+.result-card.uncertain {
+  border-color: var(--warning);
+  background: #fffbea;
+}
+.result-card.healthy { border-color: var(--primary); background: #f0fbf5; }
+.result-card.diseased { border-color: var(--danger); background: #fdf1f0; }
+
+.distribution {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.distribution .row {
+  display: grid;
+  grid-template-columns: 120px 1fr 50px;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.distribution .row .bar {
+  height: 10px;
+  background: #eef1f4;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.distribution .row .bar span {
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  width: 0%;
+  transition: width 0.4s;
+}
+
+#recommendationBox {
+  padding: 16px;
+  background: #f0fbf5;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  color: #2c3e50;
+}

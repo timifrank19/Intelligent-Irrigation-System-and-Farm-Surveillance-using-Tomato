@@ -1,0 +1,76 @@
+/* =============================================================================
+   FILE:      frontend/css/irrigation.css
+   LOCATION:  Intelligent_Tomato_Farm/frontend/css/irrigation.css
+   PURPOSE:   Irrigation-specific UI: pump light, battery, status, cards.
+   ============================================================================= */
+
+.status-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pump-status { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+.pump-light {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #95a5a6;
+  transition: all 0.3s;
+}
+.pump-light.on {
+  background: var(--primary);
+  box-shadow: 0 0 14px var(--primary);
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+.battery-indicator {
+  background: var(--light);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.battery-indicator.low { color: var(--danger); animation: blink 1s infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.grid .stat-card {
+  background: #f8f9fa;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.grid .stat-card:hover { background: #eef1f4; transform: translateY(-2px); }
+.grid .stat-card .stat-value { font-size: 1.4rem; font-weight: 800; }
+.grid .stat-card .stat-label { font-size: 0.8rem; color: #777; }
+
+.forecast-card {
+  background: #f8f9fa;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.forecast-card .label { font-weight: 600; font-size: 0.9rem; }
+.forecast-card .value { font-family: 'Courier New', monospace;
+                        font-size: 0.95rem; margin: 6px 0; }
+.forecast-card .conf { font-size: 0.75rem; color: #777; }
+
+.threshold-card {
+  background: #f8f9fa;
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+.threshold-card .param { font-weight: 700; font-size: 0.85rem; }
+.threshold-card .vals  { font-size: 0.75rem; color: #666; margin-top: 4px; }
+
+.ai-stat {
+  background: #f8f9fa;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+}
+.ai-stat .label { font-size: 0.75rem; color: #777; }
+.ai-stat .value { font-size: 1.15rem; font-weight: 800; margin-top: 4px; }

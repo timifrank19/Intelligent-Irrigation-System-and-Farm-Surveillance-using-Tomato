@@ -1,0 +1,305 @@
+<!-- =========================================================================
+     FILE:      frontend/index.html
+     LOCATION:  Intelligent_Tomato_Farm/frontend/index.html
+     PURPOSE:   Single-page application shell. Contains the navbar with all
+                seven tabs and the page containers. Navigation is handled by
+                JavaScript. Served by FastAPI at "/".
+     ========================================================================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Tomato Farm</title>
+
+<!-- CSS -->
+<link rel="stylesheet" href="/static/css/base.css">
+<link rel="stylesheet" href="/static/css/navbar.css">
+<link rel="stylesheet" href="/static/css/irrigation.css">
+<link rel="stylesheet" href="/static/css/surveillance.css">
+<link rel="stylesheet" href="/static/css/upload.css">
+<link rel="stylesheet" href="/static/css/tomato.css">
+<link rel="stylesheet" href="/static/css/results.css">
+<link rel="stylesheet" href="/static/css/admin.css">
+<link rel="stylesheet" href="/static/css/notifications.css">
+</head>
+<body>
+
+<!-- =============================== NAVBAR =============================== -->
+<nav class="navbar">
+  <div class="logo">
+    <div class="logo-icon">🍅</div>
+    <span class="logo-text">Intelligent Tomato Farm</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" data-page="home">Home</button>
+    <button class="nav-btn" data-page="dashboard">Dashboard</button>
+    <button class="nav-btn" data-page="analytics">Analytics</button>
+    <button class="nav-btn" data-page="settings">Settings</button>
+    <button class="nav-btn admin-gated" data-page="surveillance">Live Surveillance</button>
+    <button class="nav-btn admin-gated" data-page="upload">Upload</button>
+    <button class="nav-btn admin-gated" data-page="results">Disease Results</button>
+    <button class="nav-btn" id="logoutBtn" style="display:none;">Logout</button>
+  </div>
+</nav>
+
+<!-- =============================== CONTAINER =============================== -->
+<div class="container">
+
+  <!-- ================= HOME ================= -->
+  <section id="home-page" class="page active">
+    <div class="panel welcome-panel">
+      <h1>Intelligent Tomato Farm</h1>
+      <p>Irrigation • Surveillance • Tomato Disease Analysis</p>
+    </div>
+
+    <div class="panel status-panel">
+      <div class="pump-status">
+        <span class="pump-light" id="pumpLight"></span>
+        <span id="pumpText">Pump: OFF</span>
+      </div>
+      <div class="battery-indicator">
+        <span id="batteryLevel">--%</span>
+      </div>
+      <button class="btn" id="overrideBtn">Manual Override OFF</button>
+    </div>
+
+    <div class="grid" id="clickableGrid"></div>
+
+    <div class="panel chart-panel">
+      <h3>Live Sensor Chart</h3>
+      <div class="chart-wrapper"><canvas id="mainChart"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <h3>Forecast (Next 3 Hours)</h3>
+      <div id="forecastGrid" class="grid"></div>
+    </div>
+
+    <div class="panel">
+      <h3>AI Model Status</h3>
+      <div class="grid" id="aiStats"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Dynamic Thresholds</h3>
+      <div class="grid" id="thresholdGrid"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Recent Sensor Data</h3>
+      <div class="table-wrapper">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>Time</th><th>Soil</th><th>Temp</th><th>Humidity</th>
+              <th>Vibration</th><th>Battery</th><th>Pump</th>
+              <th>Schedule</th><th>Fault</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashboard-page" class="page">
+    <div class="panel chart-panel">
+      <h3>Soil Moisture</h3>
+      <div class="chart-wrapper"><canvas id="dashboardChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Forecast</h3>
+      <div id="dashboardForecastGrid" class="grid"></div>
+    </div>
+    <div class="panel">
+      <h3>Current Thresholds</h3>
+      <div id="dashboardThresholdGrid" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= ANALYTICS ================= -->
+  <section id="analytics-page" class="page">
+    <div class="panel">
+      <h3>Forecast Details</h3>
+      <div id="analyticsForecastGrid" class="grid"></div>
+    </div>
+    <div class="panel">
+      <h3>Full Sensor Data (Last 20)</h3>
+      <div class="table-wrapper">
+        <table id="analyticsTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th><th>Soil</th><th>Temp</th><th>Humidity</th>
+              <th>Vibration</th><th>Battery</th><th>Pump</th>
+              <th>Confidence</th><th>Schedule</th><th>Fault</th>
+            </tr>
+          </thead>
+          <tbody id="analyticsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section id="settings-page" class="page">
+    <div class="panel">
+      <h3>AI Model</h3>
+      <p id="aiStatus">Loading...</p>
+      <button class="btn" id="retrainBtn">Retrain AI Now</button>
+    </div>
+    <div class="panel">
+      <h3>Data Management</h3>
+      <button class="btn" id="exportBtn">Export CSV</button>
+    </div>
+    <div class="panel">
+      <h3>System Statistics</h3>
+      <p id="systemStats">Loading...</p>
+    </div>
+    <div class="panel">
+      <h3>Smart Schedule</h3>
+      <p>Morning: 5:00 AM – 8:00 AM</p>
+      <p>Evening: 5:00 PM – 8:00 PM</p>
+    </div>
+  </section>
+
+  <!-- ================= LIVE SURVEILLANCE ================= -->
+  <section id="surveillance-page" class="page">
+    <div class="panel">
+      <h3>Live Surveillance</h3>
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="auto">Auto</button>
+        <button class="mode-btn" data-mode="day">Day (RGB)</button>
+        <button class="mode-btn" data-mode="night">Night (IR)</button>
+      </div>
+      <div class="video-wrapper">
+        <video id="surveillanceVideo" autoplay muted playsinline></video>
+        <canvas id="surveillanceOverlay"></canvas>
+        <div id="recIndicator" class="rec-indicator" style="display:none;">REC</div>
+      </div>
+      <div class="controls-row">
+        <button class="btn" id="startCamBtn">Start Camera</button>
+        <button class="btn btn-danger" id="stopCamBtn" disabled>Stop Camera</button>
+        <button class="btn" id="startRecBtn" disabled>Start Recording</button>
+        <button class="btn btn-danger" id="stopRecBtn" disabled>Stop Recording</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Recent Detections</h3>
+      <div id="surveillanceEvents" class="event-list"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Stored Recordings</h3>
+      <div id="recordingsList" class="event-list"></div>
+    </div>
+  </section>
+
+  <!-- ================= UPLOAD ================= -->
+  <section id="upload-page" class="page">
+    <div class="panel">
+      <h3>Upload Image (Instant Analysis)</h3>
+      <input type="file" id="imageUpload" accept="image/*">
+      <button class="btn" id="imageAnalyzeBtn">Analyze Image</button>
+      <div id="imageStatus" class="status-text"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Upload Video (Async Analysis, 5–10 min)</h3>
+      <input type="file" id="videoUpload" accept="video/*">
+      <button class="btn" id="videoAnalyzeBtn">Analyze Video</button>
+      <div id="videoStatus" class="status-text"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Analyze Stored Surveillance Recording</h3>
+      <select id="recordingSelect"></select>
+      <button class="btn" id="libraryAnalyzeBtn">Analyze Selected</button>
+      <div id="libraryStatus" class="status-text"></div>
+    </div>
+  </section>
+
+  <!-- ================= DISEASE RESULTS ================= -->
+  <section id="results-page" class="page">
+    <div class="panel">
+      <h3>Latest Disease Decision</h3>
+      <div id="latestResult" class="result-card">No results yet.</div>
+    </div>
+    <div class="panel">
+      <h3>Evidence</h3>
+      <div id="evidenceContainer" class="evidence-grid"></div>
+    </div>
+    <div class="panel">
+      <h3>Recommendation</h3>
+      <div id="recommendationBox">—</div>
+    </div>
+    <div class="panel">
+      <h3>Confirmation (Admin)</h3>
+      <p>Confirm the above decision:</p>
+      <button class="btn" id="confirmYes">Yes</button>
+      <button class="btn btn-danger" id="confirmNo">No</button>
+      <div id="confirmStatus" class="status-text"></div>
+    </div>
+    <div class="panel">
+      <h3>Recent Results</h3>
+      <div class="table-wrapper">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Time</th><th>Source</th><th>YOLO</th><th>Confidence</th>
+              <th>Supervisor</th><th>Uncertain</th><th>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- =============================== ADMIN GATE =============================== -->
+<div id="adminGate" class="admin-gate" style="display:none;">
+  <div class="admin-box">
+    <h2>Admin Access Required</h2>
+    <input type="password" id="adminPassword" placeholder="Admin password">
+    <button class="btn" id="adminLoginBtn">Unlock</button>
+    <div id="adminError" class="status-text error"></div>
+  </div>
+</div>
+
+<!-- =============================== NOTIFICATIONS =============================== -->
+<div id="notifications" class="notification-container"></div>
+
+<!-- =============================== SCRIPTS =============================== -->
+<script src="/static/js/config.js"></script>
+<script src="/static/js/utils.js"></script>
+<script src="/static/js/notifications.js"></script>
+<script src="/static/js/websocket.js"></script>
+<script src="/static/js/admin.js"></script>
+
+<script src="/static/js/irrigation/charts.js"></script>
+<script src="/static/js/irrigation/data.js"></script>
+<script src="/static/js/irrigation/ui.js"></script>
+<script src="/static/js/irrigation/controls.js"></script>
+
+<script src="/static/js/surveillance/video.js"></script>
+<script src="/static/js/surveillance/overlay.js"></script>
+<script src="/static/js/surveillance/events.js"></script>
+<script src="/static/js/surveillance/recorder.js"></script>
+<script src="/static/js/surveillance/mode.js"></script>
+
+<script src="/static/js/upload/upload_image.js"></script>
+<script src="/static/js/upload/upload_video.js"></script>
+<script src="/static/js/upload/upload_library.js"></script>
+
+<script src="/static/js/tomato/evidence.js"></script>
+<script src="/static/js/tomato/results.js"></script>
+<script src="/static/js/tomato/async_job.js"></script>
+
+<script src="/static/js/main.js"></script>
+
+</body>
+</html>

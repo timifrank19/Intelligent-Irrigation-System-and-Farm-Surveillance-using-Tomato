@@ -1,0 +1,48 @@
+/* =============================================================================
+   FILE:      frontend/css/notifications.css
+   LOCATION:  Intelligent_Tomato_Farm/frontend/css/notifications.css
+   PURPOSE:   Toast notification system used by every tab.
+   ============================================================================= */
+
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9500;
+  max-width: 340px;
+}
+
+.toast {
+  background: #fff;
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  animation: slideIn 0.3s ease;
+  font-size: 0.85rem;
+  color: var(--dark);
+}
+.toast.human  { border-left-color: #3498db; }
+.toast.animal { border-left-color: #9b59b6; }
+.toast.disease { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.success { border-left-color: var(--primary); }
+
+.toast .title { font-weight: 700; margin-bottom: 2px; }
+.toast .time  { font-size: 0.7rem; color: #888; }
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  to { transform: translateX(120%); opacity: 0; }
+}
+.toast.leaving { animation: fadeOut 0.3s forwards; }
+
+@media (max-width: 480px) {
+  .notification-container { right: 10px; bottom: 10px; left: 10px; max-width: none; }
+}
